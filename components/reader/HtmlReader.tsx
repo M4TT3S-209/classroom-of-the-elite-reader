@@ -255,9 +255,11 @@ export function HtmlReader({ content, title, prevChapter, nextChapter, volumeId,
             const JSZip = (await import('jszip')).default;
             const zip = new JSZip();
             zip.file("mimetype", "application/epub+zip");
-            zip.folder("META-INF").file("container.xml", `<?xml version=\"1.0\"?><container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\"><rootfiles><rootfile full-path=\"OEBPS/content.opf\" media-type=\"application/oebps-package+xml\"/></rootfiles></container>`);
-            zip.folder("OEBPS").file("content.opf", `<?xml version=\"1.0\" encoding=\"UTF-8\"?><package xmlns=\"http://www.idpf.org/2007/opf\" unique-identifier=\"BookId\" version=\"2.0\"><metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\"><dc:title>${title || volumeTitle || 'Short Story'}</dc:title><dc:language>en</dc:language></metadata><manifest><item id=\"content\" href=\"content.xhtml\" media-type=\"application/xhtml+xml\"/></manifest><spine toc=\"ncx\"><itemref idref=\"content\"/></spine></package>`);
-            zip.folder("OEBPS").file("content.xhtml", `<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>${title || volumeTitle || 'Short Story'}</title></head><body>${content}</body></html>`);
+            const metaInf = zip.folder("META-INF") || zip;
+            metaInf.file("container.xml", `<?xml version=\"1.0\"?><container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\"><rootfiles><rootfile full-path=\"OEBPS/content.opf\" media-type=\"application/oebps-package+xml\"/></rootfiles></container>`);
+            const oebps = zip.folder("OEBPS") || zip;
+            oebps.file("content.opf", `<?xml version=\"1.0\" encoding=\"UTF-8\"?><package xmlns=\"http://www.idpf.org/2007/opf\" unique-identifier=\"BookId\" version=\"2.0\"><metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\"><dc:title>${title || volumeTitle || 'Short Story'}</dc:title><dc:language>en</dc:language></metadata><manifest><item id=\"content\" href=\"content.xhtml\" media-type=\"application/xhtml+xml\"/></manifest><spine toc=\"ncx\"><itemref idref=\"content\"/></spine></package>`);
+            oebps.file("content.xhtml", `<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>${title || volumeTitle || 'Short Story'}</title></head><body>${content}</body></html>`);
             const blob = await zip.generateAsync({ type: "blob" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
