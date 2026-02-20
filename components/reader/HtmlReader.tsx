@@ -235,41 +235,21 @@ export function HtmlReader({ content, title, prevChapter, nextChapter, volumeId,
 
     const handlePrint = () => window.print();
 
-    const handleDownload = async () => {
+    const handleDownload = () => {
+        if (!epubSource) return;
+
         let filename = "Classroom_of_the_Elite.epub";
+
         if (volumeTitle) {
             filename = `Classroom_of_the_Elite_${volumeTitle.replace(/\s+/g, '_')}.epub`;
         }
 
-        if (epubSource) {
-            // Normal volumes: download the static epub
-            const link = document.createElement('a');
-            link.href = epubSource;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } else {
-            // Short stories: generate a minimal EPUB on the fly
-            // Use JSZip to create the EPUB
-            const JSZip = (await import('jszip')).default;
-            const zip = new JSZip();
-            // Minimal EPUB structure
-            zip.file("mimetype", "application/epub+zip");
-            zip.folder("META-INF").file("container.xml", `<?xml version=\"1.0\"?><container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\"><rootfiles><rootfile full-path=\"OEBPS/content.opf\" media-type=\"application/oebps-package+xml\"/></rootfiles></container>`);
-            zip.folder("OEBPS").file("content.opf", `<?xml version=\"1.0\" encoding=\"UTF-8\"?><package xmlns=\"http://www.idpf.org/2007/opf\" unique-identifier=\"BookId\" version=\"2.0\"><metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\"><dc:title>${title || volumeTitle || 'Short Story'}</dc:title><dc:language>en</dc:language></metadata><manifest><item id=\"content\" href=\"content.xhtml\" media-type=\"application/xhtml+xml\"/></manifest><spine toc=\"ncx\"><itemref idref=\"content\"/></spine></package>`);
-            zip.folder("OEBPS").file("content.xhtml", `<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title>${title || volumeTitle || 'Short Story'}</title></head><body>${content}</body></html>`);
-            // Generate the EPUB blob
-            const blob = await zip.generateAsync({ type: "blob" });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setTimeout(() => URL.revokeObjectURL(url), 10000);
-        }
+        const link = document.createElement('a');
+        link.href = epubSource;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         setDownloadMenuOpen(false);
         setMobileMenuOpen(false);
     };
