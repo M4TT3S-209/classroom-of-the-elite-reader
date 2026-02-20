@@ -236,6 +236,7 @@ export function HtmlReader({ content, title, prevChapter, nextChapter, volumeId,
     const handlePrint = () => window.print();
 
     const handleDownload = async () => {
+        console.log('Download triggered');
         let filename = "Classroom_of_the_Elite.epub";
         if (volumeTitle) {
             filename = `Classroom_of_the_Elite_${volumeTitle.replace(/\s+/g, '_')}.epub`;
