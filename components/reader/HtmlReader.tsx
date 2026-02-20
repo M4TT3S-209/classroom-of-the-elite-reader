@@ -435,7 +435,7 @@ export function HtmlReader({ content, title, prevChapter, nextChapter, volumeId,
                                     <button onClick={handlePrint} className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm hover:bg-accent transition-colors text-left">
                                         <Printer className="h-4 w-4" /> Print
                                     </button>
-                                    <button onClick={handleDownload} disabled={!epubSource} className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm hover:bg-accent transition-colors disabled:opacity-40 text-left">
+                                    <button onClick={handleDownload} className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm hover:bg-accent transition-colors text-left">
                                         <FileDown className="h-4 w-4" /> Download EPUB
                                     </button>
                                 </div>
@@ -468,7 +468,7 @@ export function HtmlReader({ content, title, prevChapter, nextChapter, volumeId,
                                 <button onClick={handlePrint} className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm hover:bg-accent transition-colors text-left">
                                     <Printer className="h-4 w-4" /> Print
                                 </button>
-                                <button onClick={handleDownload} disabled={!epubSource} className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm hover:bg-accent transition-colors disabled:opacity-40 text-left">
+                                <button onClick={handleDownload} className="flex w-full items-center gap-2 rounded px-3 py-2 text-sm hover:bg-accent transition-colors text-left">
                                     <FileDown className="h-4 w-4" /> Download
                                 </button>
                             </div>
